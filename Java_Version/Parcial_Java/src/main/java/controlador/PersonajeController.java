@@ -1,4 +1,4 @@
-package parcial_java;
+package controlador;
 
 import db.Conexion;
 import java.sql.Connection;
@@ -62,4 +62,21 @@ public class PersonajeController {
             System.out.println("Error al listar personajes: " + e.getMessage());
         }
     }
+        
+    public boolean eliminarPersonaje(int id) {
+        String sql = "DELETE FROM personaje WHERE id = ?";
+        try (Connection cn = Conexion.getConexion();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+            
+            ps.setInt(1, id);
+            int filasAfectadas = ps.executeUpdate();
+            
+           
+            return filasAfectadas > 0; 
+        } catch (SQLException e) {
+            System.out.println("Ya se borro: " + e.getMessage());
+            return false;
+        }
+    }
+
 }

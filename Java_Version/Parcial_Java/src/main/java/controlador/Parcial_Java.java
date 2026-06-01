@@ -1,4 +1,4 @@
-package parcial_java;
+package controlador;
 
 import vista.MenuVista;
 

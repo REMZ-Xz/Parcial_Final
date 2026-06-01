@@ -1,6 +1,6 @@
 package vista;
 
-import parcial_java.PersonajeController;
+import controlador.PersonajeController;
 
 public class MenuVista {
     private PersonajeController controlador;
@@ -9,7 +9,7 @@ public class MenuVista {
         this.controlador = new PersonajeController();
     }
 
-        public void iniciar() {
+    public void iniciar() {
         System.out.println("Sistema");
         
         if (controlador.verificarConexion()) {
@@ -19,11 +19,13 @@ public class MenuVista {
             java.util.Scanner teclado = new java.util.Scanner(System.in);
             int opcion = 0;
             
-            while (opcion != 3) {
+            // Cambiado a 4 para dar espacio a la nueva opcion
+            while (opcion != 4) { 
                 System.out.println("--- MENU PRINCIPAL ---");
                 System.out.println("1. Crear nuevo personaje");
                 System.out.println("2. Ver personajes");
-                System.out.println("3. Salir");
+                System.out.println("3. Eliminar personaje por ID");
+                System.out.println("4. Salir");
                 System.out.print("Selecciona una opcion: ");
                 
                 opcion = teclado.nextInt();
@@ -48,6 +50,16 @@ public class MenuVista {
                         controlador.listarPersonajes();
                         break;
                     case 3:
+                        System.out.print("Ingresa el ID del personaje: ");
+                        int idEliminar = teclado.nextInt();
+                        
+                        if (controlador.eliminarPersonaje(idEliminar)) {
+                            System.out.println("Personaje eliminado");
+                        } else {
+                            System.out.println("No se encontro el personaje");
+                        }
+                        break;
+                    case 4:
                         System.out.println("Saliendo del sistema");
                         break;
                     default:
@@ -62,5 +74,4 @@ public class MenuVista {
             System.out.println("Revisar que los parametros requeridos esten bien y que el servidor este prendido");
         }
     }
-
 }
