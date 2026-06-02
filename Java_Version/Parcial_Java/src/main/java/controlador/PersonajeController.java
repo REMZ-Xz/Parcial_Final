@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import model.Personaje;
 
 public class PersonajeController {
 
@@ -15,7 +16,7 @@ public class PersonajeController {
                 cn.close();
                 return true;
             } catch (SQLException e) {
-                System.out.println("Error al cerrar conexion: " + e.getMessage());
+                System.out.println("No se pudo cerrar la conexion: " + e.getMessage());
             }
         }
         return false;
@@ -33,7 +34,7 @@ public class PersonajeController {
             ps.executeUpdate();
             return true;
         } catch (SQLException e) {
-            System.out.println("Error al crear personaje: " + e.getMessage());
+            System.out.println("No se pudo crear el personaje: " + e.getMessage());
             return false;
         }
     }
@@ -49,17 +50,60 @@ public class PersonajeController {
             
             while (rs.next()) {
                 tienePersonajes = true;
-                System.out.println("ID: " + rs.getInt("id") + 
-                                   " Nombre: " + rs.getString("nombre") + 
-                                   " Clase ID: " + rs.getInt("clase_id") + 
-                                   " Vida: " + rs.getInt("vida"));
+                int id = rs.getInt("id");
+                String nombre = rs.getString("nombre");
+                int claseId = rs.getInt("clase_id");
+                int vida = rs.getInt("vida");
+                
+                Personaje p;
+                
+                switch (claseId) {
+                    case 1:
+                        p = new Personaje(id, nombre, claseId, vida) {
+                            @Override
+                            public String habilidadEspecial() {
+                                return "blande su espada";
+                            }
+                        };
+                        break;
+                    case 2:
+                        p = new Personaje(id, nombre, claseId, vida) {
+                            @Override
+                            public String habilidadEspecial() {
+                                return "lanza fuego";
+                            }
+                        };
+                        break;
+                    case 3:
+                        p = new Personaje(id, nombre, claseId, vida) {
+                            @Override
+                            public String habilidadEspecial() {
+                                return "dispara una flecha";
+                            }
+                        };
+                        break;
+                    default:
+                        p = new Personaje(id, nombre, claseId, vida) {
+                            @Override
+                            public String habilidadEspecial() {
+                                return "ataca";
+                            }
+                        };
+                        break;
+                }
+                
+                System.out.println("ID: " + p.getId() + 
+                                   " Nombre: " + p.getNombre() + 
+                                   " Clase ID: " + p.getClaseId() + 
+                                   " Vida: " + p.getVida() + 
+                                   " Accion: " + p.habilidadEspecial());
             }
             
             if (!tienePersonajes) {
-                System.out.println("No hay personajes registrados.");
+                System.out.println("No hay personajes ");
             }
         } catch (SQLException e) {
-            System.out.println("Error al listar personajes: " + e.getMessage());
+            System.out.println("No se pueden mostrar los personajes: " + e.getMessage());
         }
     }
         
@@ -70,13 +114,10 @@ public class PersonajeController {
             
             ps.setInt(1, id);
             int filasAfectadas = ps.executeUpdate();
-            
-           
             return filasAfectadas > 0; 
         } catch (SQLException e) {
             System.out.println("Ya se borro: " + e.getMessage());
             return false;
         }
     }
-
 }
