@@ -1,5 +1,6 @@
 from db.conexion import Conexion
 from mysql.connector import Error
+from modelo.personaje import Personaje, Guerrero  
 
 class PersonajeController:
     def verificar_conexion(self):
@@ -42,7 +43,14 @@ class PersonajeController:
                 print("No hay personajes registrados.")
             else:
                 for p in personajes:
-                    print(f"ID: {p['id']} | Nombre: {p['nombre']} | Clase ID: {p['clase_id']} | Vida: {p['vida']}")
+                   
+                    if p['clase_id'] == 1:
+                        obj_p = Guerrero(p['id'], p['nombre'], p['vida'])
+                    else:
+                        obj_p = Personaje(p['id'], p['nombre'], p['clase_id'], p['vida'])
+                    
+                    print(f"ID: {obj_p.id} | Nombre: {obj_p.nombre} (Vida: {obj_p.vida}) -> {obj_p.atacar()}")
+            
             cursor.close()
             cn.close()
         except Error as e:
@@ -64,3 +72,4 @@ class PersonajeController:
         except Error as e:
             print(f"Error al eliminar: {e}")
             return False
+
